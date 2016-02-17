@@ -19,6 +19,8 @@ class MenuScene(Scene):
         self.buttons = []
         self.build_menu()
 
+        self.has_updates = True
+
     def render(self, screen):
         screen.blit(self.bg, (0, 0))
         # screen.blit(self.text, (2, 5))
@@ -27,7 +29,9 @@ class MenuScene(Scene):
             btn.draw(screen)
 
     def update(self):
-        pass
+        current_update_state = self.has_updates
+        self.has_updates = False
+        return current_update_state
 
     def handle_events(self, e):
         if e.type is pygame.MOUSEBUTTONUP:

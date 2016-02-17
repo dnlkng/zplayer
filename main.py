@@ -1,5 +1,6 @@
 import pygame
 import globals
+import time
 from scenemanager import SceneManager
 
 
@@ -12,16 +13,22 @@ def main():
     manager = SceneManager()
 
     while running:
-        event = pygame.event.wait()
+        for event in pygame.event.get():
+            if event.type is pygame.MOUSEBUTTONUP:
+                manager.current_scene.handle_events(event)
 
-        if event.type is pygame.QUIT:
-            print "bye"
-            running = False
+            elif event.type is pygame.QUIT:
+                print "bye"
+                running = False
 
-        manager.current_scene.handle_events(event)
-        manager.current_scene.update()
-        manager.current_scene.render(screen)
-        pygame.display.flip()
+        has_updates = manager.current_scene.update()
+
+        if has_updates:
+            print "has updates"
+            manager.current_scene.render(screen)
+            pygame.display.flip()
+
+        time.sleep(.2)
 
 if __name__ == "__main__":
     main()

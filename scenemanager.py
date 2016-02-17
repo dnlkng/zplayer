@@ -14,6 +14,7 @@ class SceneManager(object):
         self.current_scene = scene
 
     def show_menu(self):
+        self.menu_scene.has_updates = True
         self.go_to(self.menu_scene)
 
     def show_player(self, folder):

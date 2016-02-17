@@ -38,6 +38,7 @@ class PlayerScene(Scene):
         self.play_icon = pygame.image.load(self.play_icon_file)
         self.pause_icon = pygame.image.load(self.pause_icon_file)
 
+        self.has_updates = True
         self.init_buttons()
 
     def render(self, screen):
@@ -63,6 +64,12 @@ class PlayerScene(Scene):
             print "track", self.tracks[self.current_track_index], "finished"
             self.is_paused = True
             self.play_pause_button.iconFg = self.play_icon
+            self.has_updates = True
+
+        current_update_stat = self.has_updates
+        self.has_updates = False
+        return current_update_stat
+
 
     def handle_events(self, e):
         if e.type is pygame.MOUSEBUTTONUP:
@@ -75,6 +82,7 @@ class PlayerScene(Scene):
         self.update_data()
 
     def update_data(self):
+        self.has_updates = True
         self.current_track_index = 0
         self.tracks = glob.glob(self.folder + "*.mp3")
         self.tracks.sort()
@@ -90,6 +98,7 @@ class PlayerScene(Scene):
         self.manager.show_menu()
 
     def fastforward(self):
+        self.has_updates = True
         print "ff"
         if self.current_track_index < self.track_count - 1:
             self.current_track_index += 1
@@ -97,6 +106,7 @@ class PlayerScene(Scene):
             self.current_track_index = 0
 
     def rewind(self):
+        self.has_updates = True
         print "rewind"
         if self.current_track_index > 0:
             self.current_track_index -= 1
@@ -104,6 +114,7 @@ class PlayerScene(Scene):
             self.current_track_index = self.track_count - 1
 
     def play_pause(self):
+        self.has_updates = True
         print "play pause"
         print self.tracks[self.current_track_index]
         if self.is_paused:
@@ -119,7 +130,7 @@ class PlayerScene(Scene):
 
     def init_buttons(self):
         button = Button((50, 5, 70, 70), cb=self.go_to_menu)
-        button.iconFg = pygame.image.load("./resources/images/rewind/rewind-64.png")
+        button.iconFg = pygame.image.load("./resources/images/Chevron-52.png")
         self.buttons.append(button)
 
         fastforward = Button((256, 120, 64, 64), cb=self.fastforward)
