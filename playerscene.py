@@ -105,6 +105,10 @@ class PlayerScene(Scene):
         else:
             self.current_track_index = 0
 
+        if not self.is_paused and self.player.isPlaying:
+            self.player.stop()
+            self.player.playTrack(self.tracks[self.current_track_index])
+
     def rewind(self):
         self.has_updates = True
         print "rewind"
@@ -112,6 +116,10 @@ class PlayerScene(Scene):
             self.current_track_index -= 1
         else:
             self.current_track_index = self.track_count - 1
+
+        if not self.is_paused and self.player.isPlaying:
+            self.player.stop()
+            self.player.playTrack(self.tracks[self.current_track_index])
 
     def play_pause(self):
         self.has_updates = True

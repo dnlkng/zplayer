@@ -25,10 +25,11 @@ class Player:
                                          stdin=subprocess.PIPE, 
                                          stderr=log_stderr)    
 
-
     def stop(self):
-        self._isPlaying = False
+        if not hasattr(self, 'playerProcess'):
+            return False
         self.playerProcess.stdin.write("q")
+        self._isPlaying = False
 
     def nextInPlaylist(self):
         if not hasattr(self, 'playerProcess'):
