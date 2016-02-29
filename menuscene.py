@@ -23,7 +23,6 @@ class MenuScene(Scene):
 
     def render(self, screen):
         screen.blit(self.bg, (0, 0))
-        # screen.blit(self.text, (2, 5))
 
         for btn in self.buttons:
             btn.draw(screen)

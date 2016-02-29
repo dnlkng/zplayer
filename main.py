@@ -1,10 +1,16 @@
+import os
+import time
 import pygame
 import globals
-import time
 from scenemanager import SceneManager
 
 
 def main():
+    if runs_on_pi():
+        os.putenv('SDL_FBDEV', '/dev/fb1')
+        os.putenv('SDL_MOUSEDRV', 'TSLIB')
+        os.putenv('SDL_MOUSEDEV', '/dev/input/touchscreen')
+
     pygame.init()
     screen = pygame.display.set_mode(globals.SCREEN_SIZE)
     pygame.display.set_caption("zPlayer")
@@ -29,6 +35,15 @@ def main():
             pygame.display.flip()
 
         time.sleep(.2)
+
+
+def runs_on_pi():
+    # it's not perfect but it will do
+    if os.uname()[4].startswith("arm"):
+        return True
+    else:
+        return False
+
 
 if __name__ == "__main__":
     main()
