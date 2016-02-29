@@ -5,25 +5,16 @@ import os
 class Player:
     """Wrapper class for mplayer"""
 
-    def playTrack(self, track):
-        if self.isPlaying:
+    def play_track(self, track):
+        if self.is_playing:
             print "terminate"
             self.playerProcess.terminate()
 
-        log_stdin = open("log_stdin.log", "w")
-        log_stdout = open("log_stdout.log", "w")
-        log_stderr = open("log_stderr.log", "w")
-        DNULL = open(os.devnull, "w")
+        dev_null = open(os.devnull, "w")
         self._isPlaying = True
 
         cmd = ["mplayer", track]
-
-        print cmd
-
-        self.playerProcess = subprocess.Popen(cmd,
-                                         stdout=log_stdout,
-                                         stdin=subprocess.PIPE, 
-                                         stderr=log_stderr)    
+        self.playerProcess = subprocess.Popen(cmd, stdin=subprocess.PIPE)
 
     def stop(self):
         if not hasattr(self, 'playerProcess'):
@@ -31,27 +22,27 @@ class Player:
         self.playerProcess.stdin.write("q")
         self._isPlaying = False
 
-    def nextInPlaylist(self):
+    def next_in_playlist(self):
         if not hasattr(self, 'playerProcess'):
             return False
         self.playerProcess.stdin.write(">")
 
-    def previouseInPlaylist(self):
+    def previous_in_playlist(self):
         if not hasattr(self, 'playerProcess'):
             return False
         self.playerProcess.stdin.write("<")
 
-    def increaseVolume(self):
+    def increase_volume(self):
         if not hasattr(self, 'playerProcess'):
             return False
         self.playerProcess.stdin.write("*")
 
-    def decreaseVolume(self):
+    def decrease_volume(self):
         if not hasattr(self, 'playerProcess'):
             return False
         self.playerProcess.stdin.write("/")
 
-    def togglePlayPause(self):
+    def toggle_play_pause(self):
         print "in togglePlayPause"
         if not hasattr(self, 'playerProcess'):
             return False
@@ -64,10 +55,13 @@ class Player:
         print self.playerProcess
 
     @property
-    def isPlaying(self):
+    def is_playing(self):
         if not hasattr(self, 'playerProcess'):
             return False
 
+        if self.playerProcess is None:
+            return False
+        
         if self.playerProcess.poll() is None:
             self._isPlaying = True
         else:
@@ -77,5 +71,5 @@ class Player:
     def __init__(self):
         self._isPlaying = False
         self._isPaused = False
-        #self.arg = arg
+        self.playerProcess = None
         pass

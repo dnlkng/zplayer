@@ -60,7 +60,7 @@ class PlayerScene(Scene):
             btn.draw(screen)
 
     def update(self):
-        if self.player.isPlaying is False and self.is_paused is False:
+        if self.player.is_playing is False and self.is_paused is False:
             print "track", self.tracks[self.current_track_index], "finished"
             self.is_paused = True
             self.play_pause_button.iconFg = self.play_icon
@@ -69,7 +69,6 @@ class PlayerScene(Scene):
         current_update_stat = self.has_updates
         self.has_updates = False
         return current_update_stat
-
 
     def handle_events(self, e):
         if e.type is pygame.MOUSEBUTTONUP:
@@ -97,7 +96,7 @@ class PlayerScene(Scene):
     def go_to_menu(self):
         self.manager.show_menu()
 
-    def fastforward(self):
+    def fast_forward(self):
         self.has_updates = True
         print "ff"
         if self.current_track_index < self.track_count - 1:
@@ -105,9 +104,9 @@ class PlayerScene(Scene):
         else:
             self.current_track_index = 0
 
-        if not self.is_paused and self.player.isPlaying:
+        if not self.is_paused and self.player.is_playing:
             self.player.stop()
-            self.player.playTrack(self.tracks[self.current_track_index])
+            self.player.play_track(self.tracks[self.current_track_index])
 
     def rewind(self):
         self.has_updates = True
@@ -117,9 +116,9 @@ class PlayerScene(Scene):
         else:
             self.current_track_index = self.track_count - 1
 
-        if not self.is_paused and self.player.isPlaying:
+        if not self.is_paused and self.player.is_playing:
             self.player.stop()
-            self.player.playTrack(self.tracks[self.current_track_index])
+            self.player.play_track(self.tracks[self.current_track_index])
 
     def play_pause(self):
         self.has_updates = True
@@ -129,31 +128,32 @@ class PlayerScene(Scene):
             self.play_pause_button.iconFg = self.pause_icon
             self.is_paused = False
 
-            self.player.playTrack(self.tracks[self.current_track_index])
+            self.player.play_track(self.tracks[self.current_track_index])
         else:
             self.play_pause_button.iconFg = self.play_icon
             self.is_paused = True
 
-            self.player.togglePlayPause()
+            self.player.toggle_play_pause()
 
     def init_buttons(self):
         button = Button((50, 5, 70, 70), cb=self.go_to_menu)
         button.iconFg = pygame.image.load("./resources/images/Chevron-52.png")
         self.buttons.append(button)
 
-        fastforward = Button((256, 120, 64, 64), cb=self.fastforward)
+        fast_forward = Button((256, 120, 64, 64), cb=self.fast_forward)
         ff_icon = "./resources/images/fast_forward/fast_forward-64.png"
-        fastforward.iconFg = pygame.image.load(ff_icon)
-        self.buttons.append(fastforward)
+        fast_forward.iconFg = pygame.image.load(ff_icon)
+        self.buttons.append(fast_forward)
 
         self.play_pause_button = Button((128, 120, 64, 64), cb=self.play_pause)
         self.play_pause_button.iconFg = self.play_icon
         self.buttons.append(self.play_pause_button)
 
-        rewindbutton = Button((0, 120, 64, 64), cb=self.rewind)
+        rewind_button = Button((0, 120, 64, 64), cb=self.rewind)
         rewind_icon = "./resources/images/rewind/rewind-64.png"
-        rewindbutton.iconFg = pygame.image.load(rewind_icon)
-        self.buttons.append(rewindbutton)
+        rewind_button.iconFg = pygame.image.load(rewind_icon)
+        self.buttons.append(rewind_button)
+
 
 def aspect_scale(img):
     """ Scales 'img' to fit into box bx/by.

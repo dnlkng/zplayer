@@ -60,5 +60,10 @@ class MenuScene(Scene):
         for i, folder in enumerate(folders):
             button = Button((x, y, 80, 80), value=folder, cb=self.on_button_clicked)
             button.iconFg = pygame.image.load(icons[i])
-            x += 80
+            if x < 200:
+                x += 80
+            else:
+                x = 40
+                y += 80
+
             self.buttons.append(button)
