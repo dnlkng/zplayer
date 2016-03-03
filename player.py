@@ -19,6 +19,10 @@ class Player:
     def stop(self):
         if not hasattr(self, 'playerProcess'):
             return False
+
+        if self.playerProcess is None:
+            return False
+
         self.playerProcess.stdin.write("q")
         self._isPlaying = False
 
@@ -46,7 +50,11 @@ class Player:
         print "in togglePlayPause"
         if not hasattr(self, 'playerProcess'):
             return False
-        self.playerProcess.stdin.write("p")
+        try:
+            self.playerProcess.stdin.write("p")
+        except Exception:
+            print "there was an excpection"
+
         self._isPaused = not self._isPaused
         print "player.isPaused: ", self._isPaused
         return self._isPaused
@@ -61,7 +69,7 @@ class Player:
 
         if self.playerProcess is None:
             return False
-        
+
         if self.playerProcess.poll() is None:
             self._isPlaying = True
         else:

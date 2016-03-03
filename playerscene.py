@@ -33,8 +33,8 @@ class PlayerScene(Scene):
         self.is_paused = True
 
         self.play_pause_button = None
-        self.play_icon_file = "./resources/images/play/play-64.png"
-        self.pause_icon_file = "./resources/images/pause/pause-64.png"
+        self.play_icon_file = "./resources/images/play.png"
+        self.pause_icon_file = "./resources/images/pause.png"
         self.play_icon = pygame.image.load(self.play_icon_file)
         self.pause_icon = pygame.image.load(self.pause_icon_file)
 
@@ -77,6 +77,7 @@ class PlayerScene(Scene):
                 btn.selected(pos)
 
     def set_folder(self, folder):
+        self.player.stop()
         self.folder = folder
         self.update_data()
 
@@ -107,6 +108,8 @@ class PlayerScene(Scene):
         if not self.is_paused and self.player.is_playing:
             self.player.stop()
             self.player.play_track(self.tracks[self.current_track_index])
+        else:
+            self.player.stop()
 
     def rewind(self):
         self.has_updates = True
@@ -119,38 +122,43 @@ class PlayerScene(Scene):
         if not self.is_paused and self.player.is_playing:
             self.player.stop()
             self.player.play_track(self.tracks[self.current_track_index])
+        else:
+            self.player.stop()
 
     def play_pause(self):
         self.has_updates = True
         print "play pause"
         print self.tracks[self.current_track_index]
-        if self.is_paused:
+
+        if not self.player.is_playing:
             self.play_pause_button.iconFg = self.pause_icon
             self.is_paused = False
-
             self.player.play_track(self.tracks[self.current_track_index])
         else:
-            self.play_pause_button.iconFg = self.play_icon
-            self.is_paused = True
-
+            if self.is_paused:
+                self.play_pause_button.iconFg = self.pause_icon
+                self.is_paused = False
+            else:
+                self.play_pause_button.iconFg = self.play_icon
+                self.is_paused = True
             self.player.toggle_play_pause()
 
     def init_buttons(self):
-        button = Button((50, 5, 70, 70), cb=self.go_to_menu)
-        button.iconFg = pygame.image.load("./resources/images/Chevron-52.png")
+        button = Button((0, 0, 42, 42), cb=self.go_to_menu)
+        button.iconFg = pygame.image.load("./resources/images/chevron.png")
         self.buttons.append(button)
 
-        fast_forward = Button((256, 120, 64, 64), cb=self.fast_forward)
-        ff_icon = "./resources/images/fast_forward/fast_forward-64.png"
+        fast_forward = Button((256, 150, 64, 64), cb=self.fast_forward)
+        ff_icon = "./resources/images/next.png"
         fast_forward.iconFg = pygame.image.load(ff_icon)
         self.buttons.append(fast_forward)
 
-        self.play_pause_button = Button((128, 120, 64, 64), cb=self.play_pause)
+        self.play_pause_button = Button((128, 150, 64, 64), cb=self.play_pause)
         self.play_pause_button.iconFg = self.play_icon
         self.buttons.append(self.play_pause_button)
 
-        rewind_button = Button((0, 120, 64, 64), cb=self.rewind)
-        rewind_icon = "./resources/images/rewind/rewind-64.png"
+        rewind_button = Button((0, 150, 64, 64), cb=self.rewind)
+        rewind_icon = "./resources/images/previous.png"
         rewind_button.iconFg = pygame.image.load(rewind_icon)
         self.buttons.append(rewind_button)
 
