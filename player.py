@@ -23,37 +23,35 @@ class Player:
         if self.playerProcess is None:
             return False
 
-        self.playerProcess.stdin.write("q")
+        self.write("q")
         self._isPlaying = False
 
     def next_in_playlist(self):
         if not hasattr(self, 'playerProcess'):
             return False
-        self.playerProcess.stdin.write(">")
+        self.write(">")
 
     def previous_in_playlist(self):
         if not hasattr(self, 'playerProcess'):
             return False
-        self.playerProcess.stdin.write("<")
+        self.write("<")
 
     def increase_volume(self):
         if not hasattr(self, 'playerProcess'):
             return False
-        self.playerProcess.stdin.write("*")
+        self.write("*")
 
     def decrease_volume(self):
         if not hasattr(self, 'playerProcess'):
             return False
-        self.playerProcess.stdin.write("/")
+        self.write("/")
 
     def toggle_play_pause(self):
         print "in togglePlayPause"
         if not hasattr(self, 'playerProcess'):
             return False
-        try:
-            self.playerProcess.stdin.write("p")
-        except Exception:
-            print "there was an excpection"
+
+        self.write("p")
 
         self._isPaused = not self._isPaused
         print "player.isPaused: ", self._isPaused
@@ -61,6 +59,12 @@ class Player:
 
     def read(self):
         print self.playerProcess
+
+    def write(self, cmd):
+        try:
+            self.playerProcess.stdin.write(cmd)
+        except Exception:
+            print "there was an exception"
 
     @property
     def is_playing(self):
