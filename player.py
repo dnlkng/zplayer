@@ -61,10 +61,12 @@ class Player:
         print self.playerProcess
 
     def write(self, cmd):
+        print cmd
         try:
             self.playerProcess.stdin.write(cmd)
-        except Exception:
+        except Exception, e:
             print "there was an exception"
+            print e
 
     @property
     def is_playing(self):
