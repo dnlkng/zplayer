@@ -29,6 +29,7 @@ class PlayerScene(Scene):
         self.current_track = None
         self.current_cover = None
 
+        self.is_for_music = False
         self.player = Player()
         self.is_paused = True
 
@@ -60,11 +61,25 @@ class PlayerScene(Scene):
             btn.draw(screen)
 
     def update(self):
-        if self.player.is_playing is False and self.is_paused is False:
-            print "track", self.tracks[self.current_track_index], "finished"
-            self.is_paused = True
-            self.play_pause_button.iconFg = self.play_icon
-            self.has_updates = True
+        if self.is_for_music:
+            if self.player.is_playing is False and self.is_paused is False:
+                print "track", self.tracks[self.current_track_index], "finished: Play next"
+                # self.is_paused = True
+                self.has_updates = True
+                print "ff"
+                if self.current_track_index < self.track_count - 1:
+                    self.current_track_index += 1
+                else:
+                    self.current_track_index = 0
+
+                self.player.stop()
+                self.player.play_track(self.tracks[self.current_track_index])
+        else:
+            if self.player.is_playing is False and self.is_paused is False:
+                print "track", self.tracks[self.current_track_index], "finished"
+                self.is_paused = True
+                self.play_pause_button.iconFg = self.play_icon
+                self.has_updates = True
 
         current_update_stat = self.has_updates
         self.has_updates = False
@@ -76,9 +91,10 @@ class PlayerScene(Scene):
             for btn in self.buttons:
                 btn.selected(pos)
 
-    def set_folder(self, folder):
+    def set_folder(self, folder, is_for_music):
         self.player.stop()
         self.folder = folder
+        self.is_for_music = is_for_music
         self.update_data()
 
     def update_data(self):
@@ -95,7 +111,7 @@ class PlayerScene(Scene):
                         track.replace("mp3", "jpg")) else self.cover_placeholder)
 
     def go_to_menu(self):
-        self.manager.show_menu()
+        self.manager.show_main_menu()
 
     def fast_forward(self):
         self.has_updates = True

@@ -6,18 +6,17 @@ import glob
 import globals
 
 
-class MenuScene(Scene):
+class FileBrowserScene(Scene):
     """Menu scene"""
 
     def __init__(self, scene_manager):
-        super(MenuScene, self).__init__(scene_manager)
+        super(FileBrowserScene, self).__init__(scene_manager)
         self.bg = Surface(globals.SCREEN_SIZE)
         self.bg.fill(Color("#fdf6e3"))
-        self.font = pygame.font.SysFont('Arial', 64)
-        self.text = self.font.render("Next", True, (211, 54, 130))
 
+        self.is_for_music = False
+        self.folder = ""
         self.buttons = []
-        self.build_menu()
 
         self.has_updates = True
 
@@ -39,11 +38,29 @@ class MenuScene(Scene):
                 btn.selected(pos)
 
     def on_button_clicked(self, folder):
-        self.manager.show_player(folder)
+        self.manager.show_player(folder, self.is_for_music)
+
+    def set_folder(self, folder, is_for_music):
+        self.folder = folder
+        self.is_for_music = is_for_music
+        self.has_updates = True
+        self.build_menu()
+
+    def go_to_main_menu(self):
+        self.manager.show_main_menu()
 
     def build_menu(self):
+        self.buttons = []
+
+        back_button = Button((0, 0, 42, 42), cb=self.go_to_main_menu)
+        back_button.iconFg = pygame.image.load("./resources/images/chevron.png")
+        self.buttons.append(back_button)
+
         book_icon_name = "icon.png"
-        path = "./audiobooks/*/"
+        #path = "./audiobooks/*/"
+        path = "./"
+        path += self.folder
+        path += "/*/"
         folders = glob.glob(path)
         icons = []
 
