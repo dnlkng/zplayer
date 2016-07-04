@@ -19,6 +19,8 @@ class PlayerScene(Scene):
         self.text = self.font.render("Next", True, (211, 54, 130))
 
         self.buttons = []
+        self.repeat_button = None
+        self.is_repeat_on = False
         self.folder = None
         self.cover_placeholder = "./resources/images/cover_placeholder.jpg"
         self.tracks = []
@@ -30,6 +32,8 @@ class PlayerScene(Scene):
         self.current_cover = None
 
         self.is_for_music = False
+        self.repeat_empty_icon = "./resources/images/repeat_empty.png"
+        self.repeat_full_icon = "./resources/images/repeat_full.png"
         self.player = Player()
         self.is_paused = True
 
@@ -60,6 +64,9 @@ class PlayerScene(Scene):
         for btn in self.buttons:
             btn.draw(screen)
 
+        if self.is_for_music:
+            self.repeat_button.draw(screen)
+
     def update(self):
         if self.is_for_music:
             if self.player.is_playing is False and self.is_paused is False:
@@ -67,10 +74,11 @@ class PlayerScene(Scene):
                 # self.is_paused = True
                 self.has_updates = True
                 print "ff"
-                if self.current_track_index < self.track_count - 1:
-                    self.current_track_index += 1
-                else:
-                    self.current_track_index = 0
+                if not self.is_repeat_on:
+                    if self.current_track_index < self.track_count - 1:
+                        self.current_track_index += 1
+                    else:
+                        self.current_track_index = 0
 
                 self.player.stop()
                 self.player.play_track(self.tracks[self.current_track_index])
@@ -90,6 +98,8 @@ class PlayerScene(Scene):
             pos = pygame.mouse.get_pos()
             for btn in self.buttons:
                 btn.selected(pos)
+            if self.is_for_music:
+                self.repeat_button.selected(pos)
 
     def set_folder(self, folder, is_for_music):
         self.player.stop()
@@ -112,6 +122,17 @@ class PlayerScene(Scene):
 
     def go_to_menu(self):
         self.manager.show_main_menu()
+
+    def repeat(self):
+        self.has_updates = True
+        print("repeat")
+        print(self.is_repeat_on)
+        self.is_repeat_on = not self.is_repeat_on
+
+        if self.is_repeat_on:
+            self.repeat_button.iconFg = pygame.image.load(self.repeat_full_icon)
+        else:
+            self.repeat_button.iconFg = pygame.image.load(self.repeat_empty_icon)
 
     def fast_forward(self):
         self.has_updates = True
@@ -177,6 +198,10 @@ class PlayerScene(Scene):
         rewind_icon = "./resources/images/previous.png"
         rewind_button.iconFg = pygame.image.load(rewind_icon)
         self.buttons.append(rewind_button)
+
+        # repeat button for music mode
+        self.repeat_button = Button((256, 60, 64, 64), cb=self.repeat)
+        self.repeat_button.iconFg = pygame.image.load(self.repeat_empty_icon)
 
 
 def aspect_scale(img):

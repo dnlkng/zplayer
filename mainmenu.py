@@ -44,9 +44,9 @@ class MainMenuScene(Scene):
 
     def build_menu(self):
         music_button = Button((60, 80, 80, 80), value="music", cb=self.on_button_clicked)
-        music_button.color = (120, 120, 120)
+        music_button.iconFg = pygame.image.load("./resources/images/note.png")
         book_button = Button((180, 80, 80, 80), value="audiobooks", cb=self.on_button_clicked)
-        book_button.color = (120, 120, 120)
+        book_button.iconFg = pygame.image.load("./resources/images/book.png")
 
         self.buttons.append(music_button)
         self.buttons.append(book_button)
