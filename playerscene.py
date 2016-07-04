@@ -209,12 +209,13 @@ def aspect_scale(img):
      This method will retain the original image's aspect ratio """
     (bx, by) = globals.SCREEN_SIZE
     ix, iy = img.get_size()
+
     if ix > iy:
         # fit to width
         scale_factor = bx / float(ix)
         sy = scale_factor * iy
         if sy > by:
-            scale_factor = by / iy
+            scale_factor = by / float(iy)
             sx = scale_factor * ix
             sy = by
         else:
@@ -224,7 +225,7 @@ def aspect_scale(img):
         scale_factor = by / float(iy)
         sx = scale_factor * ix
         if sx > bx:
-            scale_factor = bx / ix
+            scale_factor = bx / float(ix)
             sx = bx
             sy = scale_factor * iy
         else:
